@@ -4,4 +4,5 @@ mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Debug ..
 make -j8
-./cmd_dir .
+# ./cmd_dir .
+./video_encoder ~/Video/input_1280x720.yuv output.h264 libx264

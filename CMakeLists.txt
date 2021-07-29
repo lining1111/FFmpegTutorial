@@ -22,6 +22,9 @@ include_directories(${PROJECT_SOURCE_DIR}/inc)
 set(demo_dir ${PROJECT_SOURCE_DIR}/demo)
 file(GLOB demo_codes ${demo_dir}/*.cpp)
 
+set(core_dir ${PROJECT_SOURCE_DIR}/src)
+file(GLOB core_codes ${core_dir}/*.cpp)
+
 foreach (demo ${demo_codes})
     string(REGEX MATCH "[^/]+$" demo_file ${demo})
     string(REPLACE ".cpp" "" demo_basename ${demo_file})
