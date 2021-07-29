@@ -9,6 +9,8 @@ extern "C" {
 #include <iostream>
 #include <string>
 
+#include "io_data.h"
+
 static AVCodec *codec = nullptr;
 static AVCodecContext *codec_ctx = nullptr;
 static AVFrame *frame = nullptr;
@@ -86,4 +88,69 @@ int32_t init_video_encoder(const char *codec_name) {
 void destroy_video_encoder() {
   // 释放编码器上下文结构
   avcodec_free_context(&codec_ctx);
+  // 释放 Frame 和 Packet 结构
+  av_frame_free(&frame);
+  av_packet_free(&pkt);
+}
+
+static int32_t encode_frame(bool flushing) {
+  int32_t result = 0;
+  if (!flushing) {
+    std::cout << "Send frame to encoder with pts: " << frame->pts << std::endl;
+  }
+
+  result = avcodec_send_frame(codec_ctx, flushing ? nullptr : frame);
+  if (result < 0) {
+    std::cerr << "Error: avcodec_send_frame failed." << std::endl;
+    return result;
+  }
+
+  while (result >= 0) {
+    result = avcodec_receive_packet(codec_ctx, pkt);
+    if (result == AVERROR(EAGAIN) || result == AVERROR_EOF) {
+      return 1;
+    } else if (result < 0) {
+      std::cerr << "Error: avcodec_receive_packet failed." << std::endl;
+      return result;
+    }
+
+    if (flushing) {
+      std::cout << "Flushing:";
+    }
+    std::cout << "Got encoded package with dts:" << pkt->dts
+              << ", pts:" << pkt->pts << ", " << std::endl;
+    write_pkt_to_file(pkt);
+  }
+  return 0;
+}
+
+int32_t encoding(int32_t frame_cnt) {
+  int result = 0;
+  for (size_t i = 0; i < frame_cnt; i++) {
+    result = av_frame_make_writable(frame);
+    if (result < 0) {
+      std::cerr << "Error: could not av_frame_make_writable." << std::endl;
+      return result;
+    }
+
+    result = read_yuv_to_frame(frame);
+    if (result < 0) {
+      std::cerr << "Error: read_yuv_to_frame failed." << std::endl;
+      return result;
+    }
+    frame->pts = i;
+
+    result = encode_frame(false);
+    if (result < 0) {
+      std::cerr << "Error: encode_frame failed." << std::endl;
+      return result;
+    }
+  }
+  result = encode_frame(true);
+  if (result < 0) {
+    std::cerr << "Error: flushing failed." << std::endl;
+    return result;
+  }
+
+  return 0;
 }

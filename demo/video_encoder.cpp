@@ -30,11 +30,14 @@ int main(int argc, char **argv) {
   }
   result = init_video_encoder(codec_name);
   if (result < 0) {
-    return result;
+    goto failed;
+  }
+  result = encoding(50);
+  if (result < 0) {
+    goto failed;
   }
 
-  // ......
-
+failed:
   destroy_video_encoder();
   close_input_output_files();
   return 0;
