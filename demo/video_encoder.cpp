@@ -3,6 +3,7 @@
 #include <string>
 
 #include "io_data.h"
+#include "video_encoder_core.h"
 
 static void usage(const char *program_name) {
   std::cout << "usage: " << std::string(program_name)
@@ -27,9 +28,14 @@ int main(int argc, char **argv) {
   if (result < 0) {
     return result;
   }
+  result = init_video_encoder(codec_name);
+  if (result < 0) {
+    return result;
+  }
 
   // ......
 
+  destroy_video_encoder();
   close_input_output_files();
   return 0;
 }
