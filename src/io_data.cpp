@@ -43,6 +43,32 @@ void close_input_output_files() {
   }
 }
 
+int32_t end_of_input_file() { return feof(input_file); }
+
+int32_t read_data_to_buf(uint8_t* buf, int32_t size, int32_t& out_size) {
+  int32_t read_size = fread(buf, 1, size, input_file);
+  if (read_size == 0) {
+    std::cerr << "Error: read_data_to_buf failed." << std::endl;
+    return -1;
+  }
+  out_size = read_size;
+  return 0;
+}
+
+int32_t write_frame_to_yuv(AVFrame* frame) {
+  uint8_t** pBuf = frame->data;
+  int* pStride = frame->linesize;
+  for (size_t i = 0; i < 3; i++) {
+    int32_t width = (i == 0 ? frame->width : frame->width / 2);
+    int32_t height = (i == 0 ? frame->height : frame->height / 2);
+    for (size_t j = 0; j < height; j++) {
+      fwrite(pBuf[i], 1, width, output_file);
+      pBuf[i] += pStride[i];
+    }
+  }
+  return 0;
+}
+
 int32_t read_yuv_to_frame(AVFrame* frame) {
   int32_t frame_width = frame->width;
   int32_t frame_height = frame->height;
