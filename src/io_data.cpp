@@ -114,3 +114,18 @@ int32_t read_yuv_to_frame(AVFrame* frame) {
 void write_pkt_to_file(AVPacket* pkt) {
   fwrite(pkt->data, 1, pkt->size, output_file);
 }
+
+int32_t write_samples_to_pcm(AVFrame* frame, AVCodecContext* codec_ctx) {
+  int data_size = av_get_bytes_per_sample(codec_ctx->sample_fmt);
+  if (data_size < 0) {
+    /* This should not occur, checking just for paranoia */
+    std::cerr << "Failed to calculate data size" << std::endl;
+    exit(1);
+  }
+  for (int i = 0; i < frame->nb_samples; i++) {
+    for (int ch = 0; ch < codec_ctx->channels; ch++) {
+      fwrite(frame->data[ch] + data_size * i, 1, data_size, output_file);
+    }
+  }
+  return 0;
+}
