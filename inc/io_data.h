@@ -19,4 +19,5 @@ int32_t read_yuv_to_frame(AVFrame* frame);
 void write_pkt_to_file(AVPacket* pkt);
 
 int32_t write_samples_to_pcm(AVFrame* frame, AVCodecContext* codec_ctx);
+int32_t read_pcm_to_frame(AVFrame* frame, AVCodecContext* codec_ctx);
 #endif
