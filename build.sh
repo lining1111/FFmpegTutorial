@@ -9,4 +9,5 @@ make -j8
 # ./video_decoder ~/Video/es.h264 output.yuv
 # ./audio_decoder ~/Video/test.mp3 output.pcm MP3
 # ./audio_encoder ~/Video/input_f32le_2_44100.pcm output.mp3 MP3
-./demuxer ~/Video/test.mp4 output1.yuv output2.pcm
+# ./demuxer ~/Video/test.mp4 output1.yuv output2.pcm
+./muxer ~/Video/es.h264 ~/Video/test.mp3 output.mp4
