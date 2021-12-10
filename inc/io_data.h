@@ -20,4 +20,9 @@ void write_pkt_to_file(AVPacket* pkt);
 
 int32_t write_samples_to_pcm(AVFrame* frame, AVCodecContext* codec_ctx);
 int32_t read_pcm_to_frame(AVFrame* frame, AVCodecContext* codec_ctx);
+
+int32_t write_samples_to_pcm2(AVFrame* frame, enum AVSampleFormat format,
+                              int channels);
+int32_t read_pcm_to_frame2(AVFrame* frame, enum AVSampleFormat format,
+                           int channels);
 #endif
