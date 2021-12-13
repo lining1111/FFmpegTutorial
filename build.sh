@@ -13,4 +13,5 @@ make -j8
 # ./muxer ~/Video/es.h264 ~/Video/test.mp3 output.mp4
 # ./video_filter ~/Video/input_1280x720.yuv 1280 720 20 hflip filtered.yuv
 # ./audio_filter ~/Video/input_f32le_2_44100.pcm output.pcm 0.5
-./video_transformer ~/Video/input_1280x720.yuv 1280x720 YUV420P scaled.data 640x480 RGB24
+# ./video_transformer ~/Video/input_1280x720.yuv 1280x720 YUV420P scaled.data 640x480 RGB24
+./audio_resampler ~/Video/input_f32le_2_44100.pcm 44100 fltp STEREO resampled.pcm 22050 s16 MONO

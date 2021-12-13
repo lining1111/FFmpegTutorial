@@ -37,5 +37,6 @@ int main(int argc, char **argv) {
   } while (0);
 
   destroy_audio_filter();
+  close_input_output_files();
   return result;
 }
