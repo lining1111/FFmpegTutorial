@@ -182,3 +182,7 @@ int32_t read_pcm_to_frame2(AVFrame* frame, enum AVSampleFormat format,
   }
   return 0;
 }
+
+void write_packed_data_to_file(const uint8_t* buf, int32_t size) {
+  fwrite(buf, 1, size, output_file);
+}

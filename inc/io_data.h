@@ -25,4 +25,6 @@ int32_t write_samples_to_pcm2(AVFrame* frame, enum AVSampleFormat format,
                               int channels);
 int32_t read_pcm_to_frame2(AVFrame* frame, enum AVSampleFormat format,
                            int channels);
+
+void write_packed_data_to_file(const uint8_t* buf, int32_t size);
 #endif
